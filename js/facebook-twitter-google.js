@@ -3,7 +3,10 @@
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/fi_FI/all.js#xfbml=1";
+  var begin = "//connect.facebook.net/";
+  var language = social_path_settings_vars.language; // get locale language
+  var end = "/all.js#xfbml=1";
+  js.src = begin.concat(language,end); // combine variables
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
