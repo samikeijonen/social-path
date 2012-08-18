@@ -3,7 +3,7 @@
  * Plugin Name: Social Path
  * Plugin URI: http://foxnet.fi
  * Description: Share your posts on Twitter, Google+ and Facebook.
- * Version: 0.1.1
+ * Version: 0.1.2
  * Author: Sami Keijonen
  * Author URI: http://foxnet.fi
  *
@@ -15,7 +15,7 @@
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @package SocialPath
- * @version 0.1.1
+ * @version 0.1.2
  * @author Sami Keijonen <sami.keijonen@foxnet.fi>
  * @copyright Copyright (c) 2012, Sami Keijonen
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -47,8 +47,11 @@ function social_path_shortcode_setup() {
  *
  * @since 0.1.0
  */
-function social_path_media() {
-	?>
+function social_path_media() { ?>
+
+	<?php ob_start(); // start html output ?>
+
+	<?php do_action( 'before_social_path_media' ); // Add action before_social_path_media ?>
 	
 	<div id="social-media">
 		
@@ -63,6 +66,14 @@ function social_path_media() {
 		<div class="fb-like" data-layout="button_count" data-send="false" data-width="160" data-show-faces="false"></div>
 		
 	</div>
+	
+	<?php do_action( 'after_social_path_media' ); // Add action after_social_path_media ?>
+	
+	<?php $social_path_media_output = ob_get_clean(); // end html output ?>
+	
+	<?php apply_filters( 'social_path_media_output_filter', $social_path_media_output ); // Filter output, if somebody needs to overwrite it. ?>
+	
+	<?php echo $social_path_media_output; ?>
 	
 	<?php
 }
@@ -91,6 +102,7 @@ function social_path_media_codes() {
  * @since 0.1.1
  */
 function social_path_get_locale() {
+
 	$social_path_valid_fb_locales = array(
 		'ca_ES', 'cs_CZ', 'cy_GB', 'da_DK', 'de_DE', 'eu_ES', 'en_PI', 'en_UD', 'ck_US', 'en_US', 'es_LA', 'es_CL', 'es_CO', 'es_ES', 'es_MX',
 		'es_VE', 'fb_FI', 'fi_FI', 'fr_FR', 'gl_ES', 'hu_HU', 'it_IT', 'ja_JP', 'ko_KR', 'nb_NO', 'nn_NO', 'nl_NL', 'pl_PL', 'pt_BR', 'pt_PT',
@@ -105,15 +117,15 @@ function social_path_get_locale() {
 	$locale = get_locale();
 
 	// convert locales like "fi" to "fi_FI", in case that works for the given locale (sometimes it does)
-	if ( strlen($locale) == 2 ) {
-		$locale = strtolower( $locale ).'_'.strtoupper( $locale );
+	if ( strlen( $locale ) == 2 ) {
+		$locale = strtolower( $locale ) . '_' . strtoupper( $locale );
 	}
 
 	// convert things like de-DE to de_DE
 	$locale = str_replace( '-', '_', $locale );
 
 	// check to see if the locale is a valid FB one, if not, use en_US as a fallback
-	if ( !in_array($locale, $social_path_valid_fb_locales ) ) {
+	if ( !in_array( $locale, $social_path_valid_fb_locales ) ) {
 		$locale = 'en_US';
 	}
 
