@@ -71,9 +71,7 @@ function social_path_media() { ?>
 	
 	<?php $social_path_media_output = ob_get_clean(); // end html output ?>
 	
-	<?php apply_filters( 'social_path_media_output_filter', $social_path_media_output ); // Filter output, if somebody needs to overwrite it. ?>
-	
-	<?php echo $social_path_media_output; ?>
+	<?php echo apply_filters( 'social_path_media_output_filter', $social_path_media_output ); // Filter output, if somebody needs to overwrite it. ?>
 	
 	<?php
 }
